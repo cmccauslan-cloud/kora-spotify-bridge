@@ -84,7 +84,8 @@ app.post("/play", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`KORA Spotify Bridge running on port ${PORT}`));
 
-  console.log("KORA Spotify Bridge running")
-);
+app.listen(PORT, () => {
+  console.log(`KORA Spotify Bridge running on port ${PORT}`);
+});
+
