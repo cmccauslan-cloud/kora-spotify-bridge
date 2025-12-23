@@ -124,6 +124,20 @@ app.get("/token", async (req, res) => {
 });
 
 // --- SERVER LISTENER ---
+
+// --- Spotify OAuth callback ---
+app.get("/callback", (req, res) => {
+  const code = req.query.code;
+  if (!code) {
+    return res.status(400).send("No authorization code found in request");
+  }
+  res.send(`
+    <h2>Authorization successful!</h2>
+    <p>Your code is:</p>
+    <pre>${code}</pre>
+    <p>Copy this code and use it to request your refresh token.</p>
+  `);
+});
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`KORA Spotify Bridge running on port ${PORT}`);
