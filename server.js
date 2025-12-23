@@ -89,7 +89,9 @@ app.post("/play", async (req, res) => {
 
 // --- LOCAL TOKEN ROUTE ---
 app.get("/token", async (req, res) => {
+  console.log("🎧 /token endpoint hit");
   try {
+
     const clientId = process.env.SPOTIFY_CLIENT_ID;
     const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
     const refreshToken = process.env.SPOTIFY_REFRESH_TOKEN;
