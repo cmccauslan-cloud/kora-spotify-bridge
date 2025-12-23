@@ -85,6 +85,48 @@ app.post("/play", async (req, res) => {
 
 const PORT = process.env.PORT || 10000;
 
+import express from "express";
+import fetch from "node-fetch";
+import cors from "cors";
+
+const app = express();
+app.use(cors());
+
+// --- TOKEN ROUTE ---
+app.get("/token", async (req, res) => {
+  try {
+    // Replace these with your actual Spotify credentials and refresh token
+    const clientId = process.env.SPOTIFY_CLIENT_ID;
+    const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+    const refreshToken = process.env.SPOTIFY_REFRESH_TOKEN;
+
+    const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+
+    const response = await fetch("https://accounts.spotify.com/api/token", {
+      method: "POST",
+      headers: {
+        "Authorization": `Basic ${auth}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        grant_type: "refresh_token",
+        refresh_token: refreshToken,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json({ error: data });
+    }
+
+    res.json({ access_token: data.access_token });
+  } catch (error) {
+    console.error("Token fetch error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`KORA Spotify Bridge running on port ${PORT}`);
 });
