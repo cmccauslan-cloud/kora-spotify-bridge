@@ -1,11 +1,10 @@
 {
-  "name": "kora-spotify-bridge",
-  "version": "1.0.0",
   "main": "server.js",
   "type": "module",
   "dependencies": {
     "express": "^4.19.0",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "cors": "^2.8.5"
   },
   "scripts": {
     "start": "node server.js"
