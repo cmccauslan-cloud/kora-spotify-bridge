@@ -1,18 +1,22 @@
 import express from "express";
 import fetch from "node-fetch";
+import cors from "cors";
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 const BROKER_URL = "https://kora-token-broker.onrender.com/token";
 
-// Helper to get a fresh access token
+// Helper to get a fresh access token from broker
 async function getAccessToken() {
   const res = await fetch(BROKER_URL);
   const data = await res.json();
   if (!data.access_token) throw new Error("No access token from broker");
   return data.access_token;
 }
+
+// --- SPOTIFY ACTION ROUTES ---
 
 // Create playlist
 app.post("/create-playlist", async (req, res) => {
@@ -83,19 +87,9 @@ app.post("/play", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 10000;
-
-import express from "express";
-import fetch from "node-fetch";
-import cors from "cors";
-
-const app = express();
-app.use(cors());
-
-// --- TOKEN ROUTE ---
+// --- LOCAL TOKEN ROUTE ---
 app.get("/token", async (req, res) => {
   try {
-    // Replace these with your actual Spotify credentials and refresh token
     const clientId = process.env.SPOTIFY_CLIENT_ID;
     const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
     const refreshToken = process.env.SPOTIFY_REFRESH_TOKEN;
@@ -105,7 +99,7 @@ app.get("/token", async (req, res) => {
     const response = await fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
       headers: {
-        "Authorization": `Basic ${auth}`,
+        Authorization: `Basic ${auth}`,
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
@@ -127,7 +121,8 @@ app.get("/token", async (req, res) => {
   }
 });
 
+// --- SERVER LISTENER ---
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`KORA Spotify Bridge running on port ${PORT}`);
 });
-
