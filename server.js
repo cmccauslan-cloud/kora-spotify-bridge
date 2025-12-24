@@ -24,9 +24,11 @@ app.post("/create-playlist", async (req, res) => {
     const { name, description = "Created by KORA" } = req.body;
     const token = await getAccessToken();
 
+    console.log("Attempting playback:", playlistUri);
     const me = await fetch("https://api.spotify.com/v1/me", {
       headers: { Authorization: `Bearer ${token}` },
     }).then(r => r.json());
+    console.log("Playback request sent to Spotify");
 
     const created = await fetch(
       `https://api.spotify.com/v1/users/${me.id}/playlists`,
